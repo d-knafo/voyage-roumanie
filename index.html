@@ -252,9 +252,6 @@
   .syncbar .s-left{font-size:12.5px;color:var(--ink-soft);display:flex;align-items:center;gap:7px;}
   .dotlive{width:9px;height:9px;border-radius:50%;background:var(--green);box-shadow:0 0 0 0 rgba(63,107,79,.5);animation:pulse 2s infinite;}
   @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(63,107,79,.5);}70%{box-shadow:0 0 0 8px rgba(63,107,79,0);}100%{box-shadow:0 0 0 0 rgba(63,107,79,0);}}
-  .share-btn{background:var(--terra);color:#fff;border:none;font-family:'Heebo';font-weight:800;font-size:13.5px;
-    padding:9px 15px;border-radius:11px;cursor:pointer;display:flex;align-items:center;gap:6px;}
-  .share-btn:active{background:var(--terra-d);}
 
   .loading{text-align:center;padding:40px;color:var(--ink-soft);font-size:14px;}
   .spin{width:26px;height:26px;border:3px solid var(--line);border-top-color:var(--green);border-radius:50%;
@@ -333,7 +330,6 @@
 
 <div class="syncbar">
   <div class="s-left"><span class="dotlive"></span> <button class="fam-chip" id="famChip">👨‍👩‍👧 בחרו משפחה</button></div>
-  <button class="share-btn" id="shareBtn">🔗 שתפו את הלינק</button>
 </div>
 
 <script>
@@ -736,18 +732,6 @@ function toast(msg){
   const el=$('#toast'); el.textContent=msg; el.classList.add('show');
   clearTimeout(toastT); toastT=setTimeout(()=>el.classList.remove('show'),1900);
 }
-
-// ---------- share ----------
-$('#shareBtn').onclick = async ()=>{
-  const url = window.location.href;
-  const txt = 'התוכנית לטיול ברומניה 🇷🇴 — תוסיפו ותחליטו יחד:';
-  if(navigator.share){
-    try{ await navigator.share({title:'הטיול שלנו ברומניה', text:txt, url}); }catch(e){}
-  } else {
-    try{ await navigator.clipboard.writeText(url); toast('הלינק הועתק! שלחו בוואטסאפ 📲'); }
-    catch(e){ toast('העתיקו את הכתובת מהדפדפן'); }
-  }
-};
 
 // ---------- sheet close on bg ----------
 $('#sheetBg').onclick = closeSheet;
