@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>הטיול שלנו · רומניה 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800;900&family=Suez+One&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f4ecd9;
+    --paper-2:#ece0c4;
+    --ink:#2c2820;
+    --ink-soft:#6a5d44;
+    --green:#3f6b4f;
+    --green-d:#2e5640;
+    --terra:#cf5b3a;
+    --terra-d:#b04425;
+    --gold:#d99a2b;
+    --card:#fffdf7;
+    --line:#dcc99c;
+    --shadow:0 6px 18px rgba(44,40,32,.16);
+    --free:#3a8ac0;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+  html,body{height:100%;}
+  body{
+    font-family:'Heebo',sans-serif;
+    background:var(--paper);
+    color:var(--ink);
+    overscroll-behavior:none;
+  }
+  /* subtle map texture */
+  body::before{
+    content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.5;
+    background-image:
+      repeating-linear-gradient(38deg, rgba(63,107,79,.04) 0 1px, transparent 1px 46px),
+      repeating-linear-gradient(-52deg, rgba(207,91,58,.03) 0 1px, transparent 1px 60px);
+  }
+  .app{position:relative;z-index:1;max-width:560px;margin:0 auto;min-height:100%;padding-bottom:86px;}
+
+  /* ---------- header ---------- */
+  header{
+    background:linear-gradient(160deg,var(--green) 0%, var(--green-d) 100%);
+    color:#fdf6e6;padding:18px 18px 16px;position:relative;overflow:hidden;
+    border-radius:0 0 22px 22px;box-shadow:var(--shadow);
+  }
+  header::after{
+    content:"";position:absolute;left:-30px;bottom:-26px;width:160px;height:90px;opacity:.18;
+    background:radial-gradient(circle at 50% 100%, #fff 0 40%, transparent 41%);
+  }
+  .kicker{font-size:12.5px;letter-spacing:1px;opacity:.85;font-weight:500;display:flex;align-items:center;gap:6px;}
+  header h1{font-family:'Suez One',serif;font-size:27px;line-height:1.05;margin:3px 0 8px;font-weight:400;}
+  .trip-meta{display:flex;gap:14px;flex-wrap:wrap;font-size:12.5px;opacity:.92;}
+  .trip-meta span{display:flex;align-items:center;gap:5px;}
+  .ro-flag{width:22px;height:14px;border-radius:2px;display:inline-block;
+    background:linear-gradient(90deg,#002b7f 0 33%,#fcd116 33% 66%,#ce1126 66%);}
+
+  /* ---------- segmented control ---------- */
+  .tabs{
+    position:sticky;top:0;z-index:30;background:var(--paper);
+    padding:12px 14px;display:flex;gap:8px;box-shadow:0 6px 14px -10px rgba(44,40,32,.4);
+  }
+  .tab{
+    flex:1;border:none;cursor:pointer;font-family:'Heebo';font-weight:700;font-size:15px;
+    padding:12px 8px;border-radius:13px;background:var(--paper-2);color:var(--ink-soft);
+    display:flex;align-items:center;justify-content:center;gap:7px;transition:.18s;
+  }
+  .tab .badge{
+    background:var(--ink-soft);color:#fff;font-size:12px;font-weight:700;border-radius:20px;
+    min-width:20px;height:20px;padding:0 5px;display:inline-flex;align-items:center;justify-content:center;
+  }
+  .tab.active{background:var(--green);color:#fff;box-shadow:var(--shadow);}
+  .tab.active .badge{background:rgba(255,255,255,.28);}
+
+  /* ---------- views ---------- */
+  .view{padding:14px 14px 8px;display:none;}
+  .view.active{display:block;animation:fade .25s ease;}
+  @keyframes fade{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+
+  .hint{
+    font-size:13px;color:var(--ink-soft);background:var(--card);border:1.5px dashed var(--line);
+    border-radius:12px;padding:10px 12px;margin-bottom:14px;line-height:1.45;
+  }
+  .hint b{color:var(--terra-d);}
+
+  /* ---------- activity card ---------- */
+  .card{
+    background:var(--card);border-radius:18px;overflow:hidden;box-shadow:var(--shadow);
+    margin-bottom:16px;border:1px solid rgba(220,201,156,.6);
+  }
+  .card .ph{position:relative;height:158px;background:var(--paper-2) center/cover no-repeat;}
+  .card .ph img{width:100%;height:100%;object-fit:cover;display:block;}
+  .card .ph::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.42),transparent 55%);}
+  .chips{position:absolute;bottom:9px;right:10px;left:10px;display:flex;gap:6px;flex-wrap:wrap;z-index:2;}
+  .chip{
+    font-size:11.5px;font-weight:700;color:#fff;background:rgba(44,40,32,.62);
+    backdrop-filter:blur(3px);padding:4px 9px;border-radius:20px;display:flex;align-items:center;gap:4px;
+  }
+  .chip.price{background:rgba(63,107,79,.9);}
+  .chip.price.free{background:rgba(58,138,192,.92);}
+  .chip.time{background:rgba(207,91,58,.9);}
+  .zone-tag{position:absolute;top:9px;right:10px;z-index:2;font-size:11px;font-weight:700;
+    background:rgba(217,154,43,.95);color:#3a2a06;padding:4px 10px;border-radius:20px;}
+
+  .card .body{padding:12px 14px 14px;}
+  .card h3{font-size:18px;font-weight:800;line-height:1.15;margin-bottom:3px;}
+  .card .desc{font-size:13.5px;color:var(--ink-soft);line-height:1.4;margin-bottom:9px;}
+  .card .meta-row{display:flex;flex-wrap:wrap;gap:6px 12px;font-size:12px;color:var(--ink-soft);margin-bottom:12px;}
+  .card .meta-row a{color:var(--green-d);font-weight:700;text-decoration:none;}
+  .card .meta-row .g{display:flex;align-items:center;gap:4px;}
+
+  .btn{
+    width:100%;border:none;cursor:pointer;font-family:'Heebo';font-weight:800;font-size:15px;
+    padding:12px;border-radius:13px;display:flex;align-items:center;justify-content:center;gap:7px;transition:.15s;
+  }
+  .btn-add{background:var(--green);color:#fff;}
+  .btn-add:active{transform:scale(.98);background:var(--green-d);}
+  .btn-add.in{background:var(--paper-2);color:var(--green-d);}
+  .btn-remove{background:#f6e7e1;color:var(--terra-d);}
+  .btn-remove:active{transform:scale(.98);}
+
+  /* ---------- plan view ---------- */
+  .day-block{margin-bottom:20px;}
+  .day-head{
+    display:flex;align-items:center;gap:9px;margin-bottom:10px;position:sticky;top:64px;z-index:5;
+  }
+  .day-pill{
+    background:var(--terra);color:#fff;font-weight:800;font-size:13px;border-radius:11px;
+    padding:6px 12px;box-shadow:var(--shadow);display:flex;flex-direction:column;align-items:center;line-height:1.05;min-width:52px;
+  }
+  .day-pill .dnum{font-size:18px;font-family:'Suez One',serif;}
+  .day-pill .dmon{font-size:10px;opacity:.9;}
+  .day-title{font-weight:700;font-size:15px;color:var(--ink);}
+  .day-line{flex:1;height:2px;background:repeating-linear-gradient(90deg,var(--line) 0 6px,transparent 6px 11px);}
+
+  .plan-item{
+    background:var(--card);border-radius:14px;box-shadow:var(--shadow);margin-bottom:10px;
+    display:flex;align-items:stretch;overflow:hidden;border:1px solid rgba(220,201,156,.6);
+  }
+  .plan-item .thumb{width:74px;flex-shrink:0;background:var(--paper-2) center/cover no-repeat;}
+  .plan-item .thumb img{width:100%;height:100%;object-fit:cover;}
+  .plan-item .pi-body{padding:9px 11px;flex:1;display:flex;flex-direction:column;justify-content:center;min-width:0;}
+  .plan-item h4{font-size:15px;font-weight:800;margin-bottom:2px;}
+  .plan-item .pi-meta{font-size:11.5px;color:var(--ink-soft);display:flex;gap:8px;flex-wrap:wrap;}
+  .plan-item .pi-actions{display:flex;flex-direction:column;border-inline-start:1px solid var(--line);}
+  .pi-btn{flex:1;border:none;background:transparent;cursor:pointer;font-size:16px;padding:0 13px;color:var(--ink-soft);}
+  .pi-btn:active{background:var(--paper-2);}
+  .pi-btn.del{color:var(--terra-d);}
+
+  .empty{text-align:center;padding:48px 20px;color:var(--ink-soft);}
+  .empty .big{font-size:42px;margin-bottom:10px;}
+  .empty h3{font-size:18px;color:var(--ink);margin-bottom:6px;}
+  .empty p{font-size:14px;line-height:1.5;}
+
+  .unassigned-head{font-weight:800;font-size:15px;color:var(--terra-d);margin:4px 0 10px;display:flex;align-items:center;gap:7px;}
+
+  /* ---------- day picker sheet ---------- */
+  .sheet-bg{position:fixed;inset:0;background:rgba(20,16,10,.5);z-index:90;display:none;animation:fade .2s;}
+  .sheet-bg.open{display:block;}
+  .sheet{
+    position:fixed;left:0;right:0;bottom:0;z-index:91;max-width:560px;margin:0 auto;
+    background:var(--paper);border-radius:22px 22px 0 0;padding:8px 16px calc(20px + env(safe-area-inset-bottom));
+    transform:translateY(100%);transition:transform .26s cubic-bezier(.2,.8,.2,1);max-height:80vh;overflow:auto;
+  }
+  .sheet.open{transform:none;}
+  .grip{width:42px;height:5px;background:var(--line);border-radius:5px;margin:8px auto 14px;}
+  .sheet h3{font-size:17px;font-weight:800;margin-bottom:4px;}
+  .sheet .sub{font-size:13px;color:var(--ink-soft);margin-bottom:14px;}
+  .day-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;}
+  .day-opt{
+    border:1.5px solid var(--line);background:var(--card);border-radius:13px;padding:11px 6px;cursor:pointer;
+    text-align:center;font-weight:700;transition:.15s;
+  }
+  .day-opt:active{transform:scale(.97);}
+  .day-opt .dn{font-family:'Suez One',serif;font-size:20px;color:var(--terra-d);}
+  .day-opt .dl{font-size:11px;color:var(--ink-soft);margin-top:2px;}
+  .day-opt.flex{grid-column:span 3;color:var(--green-d);border-style:dashed;}
+
+  /* ---------- toast ---------- */
+  .toast{
+    position:fixed;bottom:96px;left:50%;transform:translateX(-50%) translateY(20px);
+    background:var(--ink);color:#fff;padding:11px 18px;border-radius:24px;font-size:14px;font-weight:600;
+    z-index:120;opacity:0;transition:.25s;box-shadow:var(--shadow);pointer-events:none;white-space:nowrap;
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+  /* ---------- sync bar ---------- */
+  .syncbar{
+    position:fixed;bottom:0;left:0;right:0;max-width:560px;margin:0 auto;z-index:40;
+    background:var(--card);border-top:1px solid var(--line);
+    padding:10px 16px calc(10px + env(safe-area-inset-bottom));
+    display:flex;align-items:center;justify-content:space-between;gap:10px;
+  }
+  .syncbar .s-left{font-size:12.5px;color:var(--ink-soft);display:flex;align-items:center;gap:7px;}
+  .dotlive{width:9px;height:9px;border-radius:50%;background:var(--green);box-shadow:0 0 0 0 rgba(63,107,79,.5);animation:pulse 2s infinite;}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(63,107,79,.5);}70%{box-shadow:0 0 0 8px rgba(63,107,79,0);}100%{box-shadow:0 0 0 0 rgba(63,107,79,0);}}
+  .share-btn{background:var(--terra);color:#fff;border:none;font-family:'Heebo';font-weight:800;font-size:13.5px;
+    padding:9px 15px;border-radius:11px;cursor:pointer;display:flex;align-items:center;gap:6px;}
+  .share-btn:active{background:var(--terra-d);}
+
+  .loading{text-align:center;padding:40px;color:var(--ink-soft);font-size:14px;}
+  .spin{width:26px;height:26px;border:3px solid var(--line);border-top-color:var(--green);border-radius:50%;
+    animation:rot .8s linear infinite;margin:0 auto 12px;}
+  @keyframes rot{to{transform:rotate(360deg);}}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <header>
+    <div class="kicker">🧭 טיול משפחתי · 4 משפחות</div>
+    <h1>רומניה — בוקרשט והקרפטים</h1>
+    <div class="trip-meta">
+      <span>📅 24 ביולי – 3 באוגוסט 2026</span>
+      <span>🏠 בסיס: פְּרֶדֶיאל <span class="ro-flag"></span></span>
+    </div>
+  </header>
+
+  <div class="tabs">
+    <button class="tab active" data-view="options" id="tabOptions">
+      ✨ אופציות <span class="badge" id="optCount">0</span>
+    </button>
+    <button class="tab" data-view="plan" id="tabPlan">
+      📋 התוכנית שלנו <span class="badge" id="planCount">0</span>
+    </button>
+  </div>
+
+  <!-- OPTIONS VIEW -->
+  <section class="view active" id="view-options">
+    <div class="hint">בחרו פעילויות והוסיפו אותן לתוכנית. כל מה שתוסיפו — <b>כל 4 המשפחות רואות</b> מיד.</div>
+    <div id="optionsList"><div class="loading"><div class="spin"></div>טוען פעילויות…</div></div>
+  </section>
+
+  <!-- PLAN VIEW -->
+  <section class="view" id="view-plan">
+    <div class="hint">התוכנית מסודרת לפי ימים. אפשר להזיז פעילות ליום אחר או להסיר אותה. ⏱️ זמני הנסיעה הם מהבסיס בפְּרֶדֶיאל.</div>
+    <div id="planList"></div>
+  </section>
+
+</div>
+
+<!-- day picker sheet -->
+<div class="sheet-bg" id="sheetBg"></div>
+<div class="sheet" id="sheet">
+  <div class="grip"></div>
+  <h3 id="sheetTitle">לאיזה יום לשבץ?</h3>
+  <div class="sub" id="sheetSub"></div>
+  <div class="day-grid" id="dayGrid"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<div class="syncbar">
+  <div class="s-left"><span class="dotlive"></span> מסונכרן · גרסה משותפת</div>
+  <button class="share-btn" id="shareBtn">🔗 שתפו את הלינק</button>
+</div>
+
+<script>
+// ---------- Trip days ----------
+const DAYS = [
+  {id:'d24', n:'24', mon:'יולי', label:'שישי', title:'הגעה לבוקרשט'},
+  {id:'d25', n:'25', mon:'יולי', label:'שבת', title:'בוקרשט'},
+  {id:'d26', n:'26', mon:'יולי', label:'ראשון', title:'בוקרשט → פרדיאל'},
+  {id:'d27', n:'27', mon:'יולי', label:'שני', title:'פרדיאל'},
+  {id:'d28', n:'28', mon:'יולי', label:'שלישי', title:'פרדיאל'},
+  {id:'d29', n:'29', mon:'יולי', label:'רביעי', title:'פרדיאל'},
+  {id:'d30', n:'30', mon:'יולי', label:'חמישי', title:'פרדיאל'},
+  {id:'d31', n:'31', mon:'יולי', label:'שישי', title:'פרדיאל'},
+  {id:'d01', n:'1',  mon:'אוגוסט', label:'שבת', title:'פרדיאל'},
+  {id:'d02', n:'2',  mon:'אוגוסט', label:'ראשון', title:'פרדיאל'},
+  {id:'d03', n:'3',  mon:'אוגוסט', label:'שני', title:'חזרה'},
+];
+
+// ---------- Activities ----------
+const ACT = [
+  {id:'bucharest', zone:'בוקרשט', title:'העיר העתיקה של בוקרשט',
+   desc:'ליפסקאני, ארמון הפרלמנט, גלידות וטיול רגלי בעיר.',
+   price:'ארמון ~70 ליי · ליפסקאני חינם', free:false, time:'בבוקרשט',
+   search:'Lipscani Bucharest', map:'https://www.google.com/maps/search/Lipscani+Bucharest',
+   img:'https://lh3.googleusercontent.com/place-photos/AJRVUZOqKa3i2S1tpMVCuJWqDSW0LLBLe9rnHmfS195tUorfmw5gWv4lIAyS4TBWADJ3L4UsfQv-bubc2KxKM-sfTv6_jsrpcaqgguMYHUnjma49V-8M2h0-ewLSIvREpP9QgX7A57ofc3RfTGson0YWhPOA=s800-w800-h600'},
+
+  {id:'herastrau', zone:'בוקרשט', title:'פארק הרסטראו',
+   desc:'פארק ענק עם אגם, סירות והשכרת אופניים — מושלם לילדים.',
+   price:'כניסה חינם · סירה/אופניים בתשלום', free:true, time:'בבוקרשט',
+   search:'Herastrau Park Bucharest', map:'https://www.google.com/maps/search/Herastrau+Park',
+   img:'https://lh3.googleusercontent.com/place-photos/AJRVUZP0XmmMXKBpY2p1FWEMFYrKykjyoqCcskDD2HlvMzyCpe24K-iJVqRdjD4LWg5APwj-sqENVl0selUzuGO8KwU9vJCaUDLQGtUi6Wpb1qb9w5ObeMKX8ddyWCO9eDorucjR9jqOsVROcNPeMmHBdTW_rA=s800-w800-h600'},
+
+  {id:'lunapark', zone:'בוקרשט', title:'לונה פארק — Orășelul Copiilor',
+   desc:'לונה פארק אמיתי: קרוסלות, רכבת קטנה ומתקנים. כיף לילדים!',
+   price:'כניסה חינם · כל מתקן 10-20 ליי', free:true, time:'בבוקרשט',
+   search:'Orășelul Copiilor Bucuresti', map:'https://www.google.com/maps/search/Oraselul+Copiilor+Bucuresti',
+   img:'https://lh3.googleusercontent.com/place-photos/AJRVUZPzI_Snta7J-3L47EcFCSiTcWCjPIr4_Vo-G-aAekS7m_S6CxNv56Gp0xAVks9Mw6AJzHWM9gL4TfM-f_XaQHIe_oH0H7k01JL-GkDkB-6yB_WPmBDuDm_Fmf1fZOLkrnnjJCIHNWopkrORmw=s800-w800-h600'},
+
+  {id:'luge', zone:'פרדיאל', title:'מגלשת קיץ + פארק חבלים',
+   desc:'Mountain Coaster על מסילה + Fun Park Trei Brazi: אומגות, טיולי חבלים וטיובינג.',
+   price:'מגלשה 28 ליי/סיבוב · מסלולים 20-30 ליי', free:false, time:'בפרדיאל (5 דק׳)',
+   search:'Mountain Coaster Predeal', map:'https://www.google.com/maps/search/Mountain+Coaster+Predeal',
+   img:'https://lh3.googleusercontent.com/place-photos/AJRVUZNxPsSwRliGPMMYwiEjzV-QcRlkbF40r_a4Ae8r9jynyVZckLBwMZrsGilO80A4beyspu5U6pH0GFZW5J6l8ziXU1m1QXNMMXjB9BtPFh9Y83g1Qivl52Gmj0JGa0K7STqz20BXmzJwETMVilhV_xDdcA=s800-w800-h600'},
+
+  {id:'bucegi', zone:'הרים', title:'רמת בוצ׳ג׳י — הספינקס והבאבּלֶה',
+   desc:'רכבל מבושטני ל-2200 מ׳! נוף מטורף על הקרפטים והליכה קלה לסלעים המפורסמים.',
+   price:'רכבל ~199-218 ליי הלוך-חזור', free:false, time:'~30 דק׳',
+   search:'Telecabina Busteni Babele', map:'https://www.google.com/maps/search/Telecabina+Busteni+Babele',
+   img:'https://lh3.googleusercontent.com/place-photos/AJRVUZMaCdTgXwydztaQV6R8x8c-p5xIgzxrxYAFuvtiyELNTEXc-pJHUj3VTPSBAQXNUNToJANI87EZTHjuY5968yRGa4pfTuv5qcCVg8lj6M3Ec51w3k7OdrufOCseRosf3JzEw_hutKqnxbddvQ=s4800-w800-h600'},
+
+  {id:'telecabina', zone:'פרדיאל', title:'רכבל פוסטוארו + Adventure Park',
+   desc:'רכבל לפסגה ב-1799 מ׳ + פארק החבלים הכי טוב באזור (מגיל 4).',
+   price:'רכבל ~80 ליי · פארק ~60 ליי (רביעי -50%)', free:false, time:'~40 דק׳',
+   search:'Adventure Park Brasov', map:'https://www.google.com/maps/search/Adventure+Park+Brasov',
+   img:'https://lh3.googleusercontent.com/place-photos/AJRVUZPZysqwItUrGeL6VS2lv0Y9RHPEaJmk3hrxqX7szRQ8E7w7lKgInQiTNw-wyC_9C-29RvJexQVDepoAJa2hx7lLp2UuQqMDowvub-SechA6i4KbZ6PAjZ38CN3G1bZFpSHGzoSyl_P-iz6qvA=s800-w800-h600'},
+
+  {id:'dino', zone:'הרים', title:'דינו פארק + מבצר ראשנוב',
+   desc:'דינוזאורים בגודל טבעי ביער + מצודה מימי הביניים ממש ליד.',
+   price:'30 ליי מבוגר / 23 ליי ילד (עד 3 חינם)', free:false, time:'~45 דק׳',
+   search:'Dino Parc Rasnov', map:'https://www.google.com/maps/search/Dino+Parc+Rasnov',
+   img:'https://lh3.googleusercontent.com/place-photos/AJRVUZMy5-4B7ECKxDkiWLku1yiH87ddmSk7xuDwGeZtzv33cFExnsHjsPysByKPmfCtT68yi97kS4l3IKyf3K6kY_eqehjUssZJkt_npy3Ygdd9fS2-UpTk6fywkU6rUoKNM2rKWUFuYaSY2c2xkg=s800-w800-h600'},
+
+  {id:'bran', zone:'הרים', title:'טירת בראן (דרקולה)',
+   desc:'הטירה המפורסמת של דרקולה 🦇 — נוף מרהיב. כדאי להזמין כרטיס מראש!',
+   price:'90 ליי מבוגר · 30 ליי ילד (עד 7 חינם)', free:false, time:'~50 דק׳',
+   search:'Bran Castle', map:'https://www.google.com/maps/search/Bran+Castle',
+   img:'https://lh3.googleusercontent.com/place-photos/AJRVUZPyHuJGIJiDIzG1u4VMt-ekUYSwz0awf2y27o7NW5tsywy67gTlL1Talj5GhVnaCcAuwNPDkES8JgjVN9W4gz42TjT30bMn7zD38u3djdu3INxsKel94spypc4I2h7VqVNjYyUPPSD6q2BG6xg=s800-w800-h600'},
+
+  {id:'aquatic', zone:'הרים', title:'פארק מים — Aquatic Paradise',
+   desc:'בריכות פנים/חוץ, מגלשות, ג׳קוזי וסאונות בבְּרַשוֹב. מנוחה מושלמת.',
+   price:'~60-90 ליי לאדם (לפי זמן)', free:false, time:'~35 דק׳',
+   search:'Aquatic Paradise Brasov', map:'https://www.google.com/maps/search/Aquatic+Paradise+Brasov',
+   img:'https://lh3.googleusercontent.com/place-photos/AJRVUZMl4w1WYW5guote7hzOA6YKS99zUyhMqByXM0jh0VxCWBQZucdbKGh-iAABFoomv3OlL3NVWHyS_pYMCCtjV5IKqAXEdS6RAd8-bspIYOtej1Gn-gtqrVKliZF76ACmIJ1h8KjAU93T2X2ZwZs=s800-w800-h600'},
+
+  {id:'brasov', zone:'הרים', title:'העיר העתיקה של בְּרַשוֹב',
+   desc:'כיכר המועצה, הרחוב הצר (Sforii) ורכבל הר טמפה. מקסים לטייל.',
+   price:'טיול חינם · רכבל טמפה ~20 ליי', free:true, time:'~30 דק׳',
+   search:'Piata Sfatului Brasov', map:'https://www.google.com/maps/search/Piata+Sfatului+Brasov',
+   img:'https://lh3.googleusercontent.com/place-photos/AJRVUZM3MlSboGErDwNUOHdk65GLd9cSlx3raobW1RyaAZ35flwXeHB6ufNGWHh5H2Xqh7o-HgVWaU-rcGM4o2Rhq57tClZdhgDWBCCSZOPoMQtZhZ8jbNu2YCUm5SdTbFwDjyhvyv3_3KRvqzIAKw=s800-w800-h600'},
+
+  {id:'peles', zone:'הרים', title:'סינאיה — טירת פּלֶש + לייזר טאג',
+   desc:'אחת הטירות היפות באירופה + לייזר טאג לילדים הגדולים 👾',
+   price:'פלש 50 ליי מבוגר · 12.5 ליי ילד', free:false, time:'~15 דק׳',
+   search:'Peles Castle Sinaia', map:'https://www.google.com/maps/search/Peles+Castle+Sinaia',
+   img:'https://lh3.googleusercontent.com/place-photos/AJRVUZPYoMSCF6YtuRQfiQyR_fh5iwagQNfYYUXiALoewbuKl7iOmg6gdX152Pu9_eSFKCkWzeeYX784umrKMP2cDYX_KqMTOSiRCRihwpog5DXjEpB5cWoT-iFW3o_dFy4FSThD4-1pda4RGMdP=s800-w800-h600'},
+
+  {id:'funpark', zone:'פרדיאל', title:'Fun Park Trei Brazi',
+   desc:'פארק חבלים, אומגות וטיובינג ביער — מצוין לילדים (חצי יום).',
+   price:'מסלולים 20-30 ליי', free:false, time:'בפרדיאל (5 דק׳)',
+   search:'Fun Park Trei Brazi Predeal', map:'https://www.google.com/maps/search/Fun+Park+Trei+Brazi+Predeal',
+   img:'https://lh3.googleusercontent.com/place-photos/AJRVUZPiXHop_YucItx0zREX3DKH4urdKCpDMhU5TXuuBy7aexuq9aIynsR5n2NbTxRwhWRb-zWQev45GPfaWSJKfqlzvWm2gS03m30OyiseOGA5eyFCWQTdJvhY3JYnDKtAy9L9Oml0ajNkPQNrq6w=s800-w800-h600'},
+];
+
+const ACT_MAP = Object.fromEntries(ACT.map(a=>[a.id,a]));
+
+// ---------- Supabase config ----------
+const SB_URL = 'https://axkbkohuvdmrctuhkbwa.supabase.co';
+const SB_KEY = 'sb_publishable_t7lBsYmSXNPFcfoWypbdYw_6-2olHYI';
+const ROW_ID = 'romania2026';
+const SB_ENDPOINT = SB_URL + '/rest/v1/trip_plan';
+const SB_HEADERS = {
+  'apikey': SB_KEY,
+  'Authorization': 'Bearer ' + SB_KEY,
+  'Content-Type': 'application/json'
+};
+
+// ---------- shared state ----------
+// plan: { actId: dayId | 'flex' }
+let plan = {};
+let pendingActId = null;
+
+const $ = s=>document.querySelector(s);
+const optionsList = $('#optionsList');
+const planList = $('#planList');
+
+async function loadPlan(){
+  try{
+    const r = await fetch(SB_ENDPOINT + '?id=eq.' + ROW_ID + '&select=data', {headers: SB_HEADERS});
+    if(!r.ok) throw new Error('http '+r.status);
+    const rows = await r.json();
+    if(rows && rows[0] && rows[0].data){ plan = rows[0].data; }
+  }catch(e){ console.warn('load failed', e); }
+}
+async function savePlan(){
+  try{
+    const r = await fetch(SB_ENDPOINT + '?id=eq.' + ROW_ID, {
+      method:'PATCH',
+      headers: {...SB_HEADERS, 'Prefer':'return=minimal'},
+      body: JSON.stringify({data: plan, updated_at: new Date().toISOString()})
+    });
+    if(!r.ok) throw new Error('http '+r.status);
+  }catch(e){ console.warn('save failed', e); toast('בעיית סנכרון — נסו שוב'); }
+}
+
+// ---------- render OPTIONS ----------
+function chip(cls, txt){ return `<span class="chip ${cls}">${txt}</span>`; }
+
+function renderOptions(){
+  optionsList.innerHTML = ACT.map(a=>{
+    const inPlan = plan[a.id] !== undefined;
+    const priceCls = a.free ? 'price free' : 'price';
+    return `<div class="card">
+      <div class="ph">
+        <span class="zone-tag">${a.zone}</span>
+        <img loading="lazy" src="${a.img}" alt="${a.title}">
+        <div class="chips">
+          ${chip(priceCls,'💰 '+a.price)}
+          ${chip('time','🚗 '+a.time)}
+        </div>
+      </div>
+      <div class="body">
+        <h3>${a.title}</h3>
+        <div class="desc">${a.desc}</div>
+        <div class="meta-row">
+          <span class="g">🔎 <a href="${a.map}" target="_blank" rel="noopener">${a.search}</a></span>
+        </div>
+        <button class="btn ${inPlan?'btn-add in':'btn-add'}" data-add="${a.id}">
+          ${inPlan ? '✓ נמצא בתוכנית · לחצו לשינוי יום' : '➕ הוסיפו לתוכנית'}
+        </button>
+      </div>
+    </div>`;
+  }).join('');
+  optionsList.querySelectorAll('[data-add]').forEach(b=>{
+    b.onclick = ()=> openSheet(b.dataset.add);
+  });
+  updateCounts();
+}
+
+// ---------- render PLAN ----------
+function renderPlan(){
+  const ids = Object.keys(plan);
+  if(ids.length === 0){
+    planList.innerHTML = `<div class="empty">
+      <div class="big">🗺️</div>
+      <h3>התוכנית עוד ריקה</h3>
+      <p>עברו ללשונית <b>אופציות</b> והוסיפו פעילויות.<br>הן יופיעו כאן מסודרות לפי ימים.</p>
+    </div>`;
+    updateCounts(); return;
+  }
+  let html = '';
+  // days with items
+  DAYS.forEach(d=>{
+    const items = ids.filter(id=> plan[id] === d.id);
+    if(items.length === 0) return;
+    html += `<div class="day-block">
+      <div class="day-head">
+        <div class="day-pill"><span class="dnum">${d.n}</span><span class="dmon">${d.mon}</span></div>
+        <div><div class="day-title">${d.label} · ${d.title}</div></div>
+        <div class="day-line"></div>
+      </div>` + items.map(planItemHTML).join('') + `</div>`;
+  });
+  // flex / not assigned
+  const flex = ids.filter(id=> plan[id]==='flex' || !DAYS.some(d=>d.id===plan[id]));
+  if(flex.length){
+    html += `<div class="day-block">
+      <div class="unassigned-head">📌 בלי יום קבוע (להחליט)</div>`
+      + flex.map(planItemHTML).join('') + `</div>`;
+  }
+  planList.innerHTML = html;
+  planList.querySelectorAll('[data-move]').forEach(b=> b.onclick=()=>openSheet(b.dataset.move));
+  planList.querySelectorAll('[data-del]').forEach(b=> b.onclick=()=>removeAct(b.dataset.del));
+  updateCounts();
+}
+
+function planItemHTML(id){
+  const a = ACT_MAP[id]; if(!a) return '';
+  return `<div class="plan-item">
+    <div class="thumb"><img loading="lazy" src="${a.img}" alt=""></div>
+    <div class="pi-body">
+      <h4>${a.title}</h4>
+      <div class="pi-meta">
+        <span>💰 ${a.price}</span>
+        <span>🚗 ${a.time}</span>
+      </div>
+    </div>
+    <div class="pi-actions">
+      <button class="pi-btn" data-move="${id}" title="העברה ליום אחר">🔀</button>
+      <button class="pi-btn del" data-del="${id}" title="הסרה">🗑️</button>
+    </div>
+  </div>`;
+}
+
+function updateCounts(){
+  $('#planCount').textContent = Object.keys(plan).length;
+  $('#optCount').textContent = ACT.length;
+}
+
+// ---------- day picker ----------
+function openSheet(actId){
+  pendingActId = actId;
+  const a = ACT_MAP[actId];
+  $('#sheetTitle').textContent = plan[actId]!==undefined ? 'העבירו ליום אחר' : 'לאיזה יום לשבץ?';
+  $('#sheetSub').textContent = a.title;
+  $('#dayGrid').innerHTML = DAYS.map(d=>`
+    <div class="day-opt" data-day="${d.id}">
+      <div class="dn">${d.n}</div>
+      <div class="dl">${d.mon} · ${d.label}</div>
+    </div>`).join('')
+    + `<div class="day-opt flex" data-day="flex">📌 בלי יום קבוע (להחליט אחר כך)</div>`;
+  $('#dayGrid').querySelectorAll('[data-day]').forEach(el=>{
+    el.onclick = ()=> assignDay(el.dataset.day);
+  });
+  $('#sheetBg').classList.add('open');
+  $('#sheet').classList.add('open');
+}
+function closeSheet(){
+  $('#sheetBg').classList.remove('open');
+  $('#sheet').classList.remove('open');
+  pendingActId = null;
+}
+async function assignDay(dayId){
+  if(!pendingActId) return;
+  const wasNew = plan[pendingActId]===undefined;
+  plan[pendingActId] = dayId;
+  const a = ACT_MAP[pendingActId];
+  closeSheet();
+  renderOptions(); renderPlan();
+  await savePlan();
+  const dayLbl = dayId==='flex' ? 'רשימת ההחלטות' : (()=>{const d=DAYS.find(x=>x.id===dayId);return d.n+' ב'+d.mon;})();
+  toast((wasNew?'נוסף ל':'הועבר ל')+dayLbl+' ✓');
+}
+async function removeAct(id){
+  delete plan[id];
+  renderOptions(); renderPlan();
+  await savePlan();
+  toast('הוסר מהתוכנית');
+}
+
+// ---------- tabs ----------
+document.querySelectorAll('.tab').forEach(t=>{
+  t.onclick = ()=>{
+    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+    document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));
+    t.classList.add('active');
+    $('#view-'+t.dataset.view).classList.add('active');
+    window.scrollTo({top:0,behavior:'smooth'});
+  };
+});
+
+// ---------- toast ----------
+let toastT;
+function toast(msg){
+  const el=$('#toast'); el.textContent=msg; el.classList.add('show');
+  clearTimeout(toastT); toastT=setTimeout(()=>el.classList.remove('show'),1900);
+}
+
+// ---------- share ----------
+$('#shareBtn').onclick = async ()=>{
+  const url = window.location.href;
+  const txt = 'התוכנית לטיול ברומניה 🇷🇴 — תוסיפו ותחליטו יחד:';
+  if(navigator.share){
+    try{ await navigator.share({title:'הטיול שלנו ברומניה', text:txt, url}); }catch(e){}
+  } else {
+    try{ await navigator.clipboard.writeText(url); toast('הלינק הועתק! שלחו בוואטסאפ 📲'); }
+    catch(e){ toast('העתיקו את הכתובת מהדפדפן'); }
+  }
+};
+
+// ---------- sheet close on bg ----------
+$('#sheetBg').onclick = closeSheet;
+
+// ---------- live refresh (other families' changes) ----------
+async function refresh(){
+  const before = JSON.stringify(plan);
+  await loadPlan();
+  if(JSON.stringify(plan) !== before){ renderOptions(); renderPlan(); }
+}
+
+// ---------- init ----------
+(async function init(){
+  await loadPlan();
+  renderOptions();
+  renderPlan();
+  setInterval(refresh, 5000); // poll for other families' updates
+})();
+</script>
+</body>
+</html>
