@@ -222,7 +222,10 @@
   /* ---------- name sheet input ---------- */
   .name-input{
     width:100%;font-family:'Heebo';font-size:16px;font-weight:600;color:var(--ink);
-    border:1.5px solid var(--line);background:var(--card);border-radius:13px;padding:13px 14px;margin-bottom:12px;
+    border:1.5px solid var(--line);background:var(--card);border-radius:13px;padding:13px 40px 13px 14px;margin-bottom:12px;
+    -webkit-appearance:none;appearance:none;cursor:pointer;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9'%3E%3Cpath d='M1 1l6 6 6-6' stroke='%236a5d44' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;background-position:left 14px center;
   }
   .name-input:focus{outline:none;border-color:var(--green);}
   .name-btn{width:100%;border:none;cursor:pointer;font-family:'Heebo';font-weight:800;font-size:16px;
@@ -316,7 +319,13 @@
   <div class="grip"></div>
   <h3 id="nameTitle">ברוכים הבאים! 👋</h3>
   <div class="sub">איזו משפחה אתם? כך כולם יראו מי הוסיף פעילויות ומי בעניין.</div>
-  <input class="name-input" id="nameInput" type="text" placeholder="לדוגמה: כנפו" autocomplete="off">
+  <select class="name-input" id="nameInput">
+    <option value="" disabled selected>בחרו משפחה…</option>
+    <option value="כנפו - גבעת זאב">כנפו - גבעת זאב</option>
+    <option value="כנפו - אשדוד">כנפו - אשדוד</option>
+    <option value="איזבה">איזבה</option>
+    <option value="כנפו - נתיבות">כנפו - נתיבות</option>
+  </select>
   <button class="name-btn" id="nameSave">המשך</button>
 </div>
 
