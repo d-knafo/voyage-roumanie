@@ -200,6 +200,31 @@
     background:var(--paper-2);color:var(--green-d);font-weight:700;font-size:14px;
     padding:11px;border-radius:13px;transition:.15s;}
   .detail-link:active{transform:scale(.98);background:var(--line);}
+  .detail-voters{font-size:13px;color:var(--ink-soft);background:var(--paper-2);border-radius:11px;
+    padding:9px 12px;margin-bottom:12px;line-height:1.5;}
+  .detail-voters b{color:var(--green-d);}
+
+  /* ---------- vote button ---------- */
+  .vote-btn{
+    width:100%;border:1.5px solid var(--line);background:var(--card);cursor:pointer;
+    font-family:'Heebo';font-weight:700;font-size:13.5px;color:var(--ink-soft);
+    padding:9px;border-radius:11px;margin-bottom:9px;display:flex;align-items:center;justify-content:center;gap:6px;transition:.15s;
+  }
+  .vote-btn:active{transform:scale(.98);}
+  .vote-btn.voted{background:var(--gold);border-color:var(--gold);color:#3a2a06;}
+  .vote-btn .vcount{font-weight:800;}
+
+  /* ---------- name sheet input ---------- */
+  .name-input{
+    width:100%;font-family:'Heebo';font-size:16px;font-weight:600;color:var(--ink);
+    border:1.5px solid var(--line);background:var(--card);border-radius:13px;padding:13px 14px;margin-bottom:12px;
+  }
+  .name-input:focus{outline:none;border-color:var(--green);}
+  .name-btn{width:100%;border:none;cursor:pointer;font-family:'Heebo';font-weight:800;font-size:16px;
+    padding:13px;border-radius:13px;background:var(--green);color:#fff;}
+  .name-btn:active{transform:scale(.98);background:var(--green-d);}
+  .fam-chip{background:none;border:none;cursor:pointer;font-family:'Heebo';font-size:12.5px;font-weight:700;
+    color:var(--green-d);display:flex;align-items:center;gap:5px;padding:0;}
 
   /* ---------- toast ---------- */
   .toast{
@@ -233,7 +258,7 @@
 <div class="app">
 
   <header>
-    <div class="kicker">🧭 טיול משפחתי · 4 משפחות</div>
+    <div class="kicker">🧭 טיול משפחתי - משפחת כנפו</div>
     <h1>רומניה — בוקרשט והקרפטים</h1>
     <div class="trip-meta">
       <span>📅 24 ביולי – 3 באוגוסט 2026</span>
@@ -280,10 +305,20 @@
   <div id="detailBody"></div>
 </div>
 
+<!-- family name sheet -->
+<div class="sheet-bg" id="nameBg"></div>
+<div class="sheet" id="nameSheet">
+  <div class="grip"></div>
+  <h3 id="nameTitle">ברוכים הבאים! 👋</h3>
+  <div class="sub">איזו משפחה אתם? כך כולם יראו מי הוסיף פעילויות ומי בעניין.</div>
+  <input class="name-input" id="nameInput" type="text" placeholder="לדוגמה: כנפו" autocomplete="off">
+  <button class="name-btn" id="nameSave">המשך</button>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <div class="syncbar">
-  <div class="s-left"><span class="dotlive"></span> מסונכרן · גרסה משותפת</div>
+  <div class="s-left"><span class="dotlive"></span> <button class="fam-chip" id="famChip">👨‍👩‍👧 בחרו משפחה</button></div>
   <button class="share-btn" id="shareBtn">🔗 שתפו את הלינק</button>
 </div>
 
@@ -404,9 +439,23 @@ const SB_HEADERS = {
 };
 
 // ---------- shared state ----------
-// plan: { actId: dayId | 'flex' }
+// plan: { actId: dayId | 'flex' }   votes: { actId: [familyName, ...] }
 let plan = {};
+let votes = {};
 let pendingActId = null;
+let familyName = localStorage.getItem('familyName') || '';
+
+// parse Supabase data, with migration from old flat format ({actId: dayId})
+function parseData(data){
+  if(!data || typeof data !== 'object'){ plan = {}; votes = {}; return; }
+  if('plan' in data || 'votes' in data){      // nouveau format
+    plan = data.plan || {};
+    votes = data.votes || {};
+  } else {                                     // ancien format plat → migration
+    plan = data;
+    votes = {};
+  }
+}
 
 const $ = s=>document.querySelector(s);
 const optionsList = $('#optionsList');
@@ -417,7 +466,7 @@ async function loadPlan(){
     const r = await fetch(SB_ENDPOINT + '?id=eq.' + ROW_ID + '&select=data', {headers: SB_HEADERS});
     if(!r.ok) throw new Error('http '+r.status);
     const rows = await r.json();
-    if(rows && rows[0] && rows[0].data){ plan = rows[0].data; }
+    if(rows && rows[0]){ parseData(rows[0].data); }
   }catch(e){ console.warn('load failed', e); }
 }
 async function savePlan(){
@@ -425,7 +474,7 @@ async function savePlan(){
     const r = await fetch(SB_ENDPOINT + '?id=eq.' + ROW_ID, {
       method:'PATCH',
       headers: {...SB_HEADERS, 'Prefer':'return=minimal'},
-      body: JSON.stringify({data: plan, updated_at: new Date().toISOString()})
+      body: JSON.stringify({data: {plan, votes}, updated_at: new Date().toISOString()})
     });
     if(!r.ok) throw new Error('http '+r.status);
   }catch(e){ console.warn('save failed', e); toast('בעיית סנכרון — נסו שוב'); }
@@ -433,6 +482,24 @@ async function savePlan(){
 
 // ---------- render OPTIONS ----------
 function chip(cls, txt){ return `<span class="chip ${cls}">${txt}</span>`; }
+
+// ---------- votes ----------
+function voteBtnHTML(actId){
+  const arr = votes[actId] || [];
+  const voted = !!familyName && arr.includes(familyName);
+  return `<button class="vote-btn ${voted?'voted':''}" data-vote="${actId}">
+    👍 ${voted?'אתם בעניין':'בעניין?'}${arr.length?` <span class="vcount">· ${arr.length}</span>`:''}
+  </button>`;
+}
+async function toggleVote(actId){
+  if(!familyName){ openNameSheet(); return; }
+  const arr = votes[actId] || [];
+  const i = arr.indexOf(familyName);
+  if(i>=0) arr.splice(i,1); else arr.push(familyName);
+  if(arr.length) votes[actId] = arr; else delete votes[actId];
+  renderOptions();
+  await savePlan();
+}
 
 function renderOptions(){
   optionsList.innerHTML = ACT.map(a=>{
@@ -449,6 +516,7 @@ function renderOptions(){
       </div>
       <div class="body">
         <h3>${a.title}</h3>
+        ${voteBtnHTML(a.id)}
         <div class="card-actions">
           <button class="btn btn-more" data-more="${a.id}">ℹ️ עוד מידע</button>
           <button class="btn ${inPlan?'btn-add in':'btn-add'}" data-add="${a.id}">
@@ -463,6 +531,9 @@ function renderOptions(){
   });
   optionsList.querySelectorAll('[data-more]').forEach(b=>{
     b.onclick = ()=> openDetail(b.dataset.more);
+  });
+  optionsList.querySelectorAll('[data-vote]').forEach(b=>{
+    b.onclick = ()=> toggleVote(b.dataset.vote);
   });
   updateCounts();
 }
@@ -573,16 +644,44 @@ function openDetail(actId){
       <a class="detail-link" href="${a.map}" target="_blank" rel="noopener">🗺️ מפה</a>
       <a class="detail-link" href="https://www.google.com/search?q=${encodeURIComponent(a.search + ' Romania')}" target="_blank" rel="noopener">🔍 גוגל</a>
     </div>
+    ${(votes[actId]&&votes[actId].length)?`<div class="detail-voters">👍 בעניין: <b>${votes[actId].map(n=>'משפחת '+n).join(', ')}</b></div>`:''}
+    ${voteBtnHTML(actId)}
     <button class="btn ${inPlan?'btn-add in':'btn-add'}" data-detail-add="${actId}">
       ${inPlan ? '✓ בתוכנית · לחצו לשינוי יום' : '➕ הוסיפו לתוכנית'}
     </button>`;
   $('#detailBody').querySelector('[data-detail-add]').onclick = ()=>{ closeDetail(); openSheet(actId); };
+  $('#detailBody').querySelector('[data-vote]').onclick = async ()=>{ await toggleVote(actId); openDetail(actId); };
   $('#detailBg').classList.add('open');
   $('#detailSheet').classList.add('open');
 }
 function closeDetail(){
   $('#detailBg').classList.remove('open');
   $('#detailSheet').classList.remove('open');
+}
+
+// ---------- family identity ----------
+function updateFamChip(){
+  $('#famChip').textContent = familyName ? ('👨‍👩‍👧 משפחת ' + familyName) : '👨‍👩‍👧 בחרו משפחה';
+}
+function openNameSheet(){
+  $('#nameInput').value = familyName;
+  $('#nameBg').classList.add('open');
+  $('#nameSheet').classList.add('open');
+  setTimeout(()=>$('#nameInput').focus(), 250);
+}
+function closeNameSheet(){
+  $('#nameBg').classList.remove('open');
+  $('#nameSheet').classList.remove('open');
+}
+function saveName(){
+  const v = $('#nameInput').value.trim();
+  if(!v) return;
+  familyName = v;
+  localStorage.setItem('familyName', v);
+  updateFamChip();
+  closeNameSheet();
+  renderOptions();
+  toast('שלום משפחת ' + v + '! 👋');
 }
 async function assignDay(dayId){
   if(!pendingActId) return;
@@ -635,19 +734,25 @@ $('#shareBtn').onclick = async ()=>{
 // ---------- sheet close on bg ----------
 $('#sheetBg').onclick = closeSheet;
 $('#detailBg').onclick = closeDetail;
+$('#nameBg').onclick = closeNameSheet;
+$('#famChip').onclick = openNameSheet;
+$('#nameSave').onclick = saveName;
+$('#nameInput').addEventListener('keydown', e=>{ if(e.key==='Enter') saveName(); });
 
 // ---------- live refresh (other families' changes) ----------
 async function refresh(){
-  const before = JSON.stringify(plan);
+  const before = JSON.stringify({plan, votes});
   await loadPlan();
-  if(JSON.stringify(plan) !== before){ renderOptions(); renderPlan(); }
+  if(JSON.stringify({plan, votes}) !== before){ renderOptions(); renderPlan(); }
 }
 
 // ---------- init ----------
 (async function init(){
   await loadPlan();
+  updateFamChip();
   renderOptions();
   renderPlan();
+  if(!familyName) openNameSheet();
   setInterval(refresh, 5000); // poll for other families' updates
 })();
 </script>
