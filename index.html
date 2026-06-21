@@ -192,11 +192,14 @@
   .detail-ph::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.4),transparent 52%);}
   .detail-title{font-size:21px;font-weight:800;line-height:1.18;margin-bottom:10px;}
   .detail-chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:13px;}
-  .detail-desc{font-size:14.5px;color:var(--ink-soft);line-height:1.55;margin-bottom:15px;}
-  .detail-map{display:flex;align-items:center;justify-content:center;gap:7px;text-decoration:none;
+  .detail-desc{font-size:14.5px;color:var(--ink);line-height:1.55;margin-bottom:9px;}
+  .detail-more{font-size:14px;color:var(--ink-soft);line-height:1.6;margin-bottom:15px;
+    border-inline-start:3px solid var(--gold);padding-inline-start:11px;}
+  .detail-links{display:flex;gap:8px;margin-bottom:10px;}
+  .detail-link{flex:1;display:flex;align-items:center;justify-content:center;gap:7px;text-decoration:none;
     background:var(--paper-2);color:var(--green-d);font-weight:700;font-size:14px;
-    padding:11px;border-radius:13px;margin-bottom:10px;transition:.15s;}
-  .detail-map:active{transform:scale(.98);background:var(--line);}
+    padding:11px;border-radius:13px;transition:.15s;}
+  .detail-link:active{transform:scale(.98);background:var(--line);}
 
   /* ---------- toast ---------- */
   .toast{
@@ -304,72 +307,84 @@ const DAYS = [
 const ACT = [
   {id:'bucharest', zone:'בוקרשט', title:'העיר העתיקה של בוקרשט',
    desc:'ליפסקאני, ארמון הפרלמנט, גלידות וטיול רגלי בעיר.',
+   more:'מתחילים מרובע ליפסקאני העתיק עם בתי הקפה והסמטאות, טועמים גלידה ומסיירים רגלי. ארמון הפרלמנט הוא המבנה האזרחי הכבד בעולם — מרשים גם מבחוץ.',
    price:'ארמון ~70 ליי · ליפסקאני חינם', free:false, time:'בבוקרשט',
    search:'Lipscani Bucharest', map:'https://www.google.com/maps/search/Lipscani+Bucharest',
    img:'https://lh3.googleusercontent.com/place-photos/AJRVUZOqKa3i2S1tpMVCuJWqDSW0LLBLe9rnHmfS195tUorfmw5gWv4lIAyS4TBWADJ3L4UsfQv-bubc2KxKM-sfTv6_jsrpcaqgguMYHUnjma49V-8M2h0-ewLSIvREpP9QgX7A57ofc3RfTGson0YWhPOA=s800-w800-h600'},
 
   {id:'herastrau', zone:'בוקרשט', title:'פארק הרסטראו',
    desc:'פארק ענק עם אגם, סירות והשכרת אופניים — מושלם לילדים.',
+   more:'אגם גדול עם השכרת סירות ופדלים, מסלולי אופניים, מגרשי משחקים ובתי קפה על המים. אידיאלי לחצי יום רגוע בין הפעילויות בעיר.',
    price:'כניסה חינם · סירה/אופניים בתשלום', free:true, time:'בבוקרשט',
    search:'Herastrau Park Bucharest', map:'https://www.google.com/maps/search/Herastrau+Park',
    img:'https://lh3.googleusercontent.com/place-photos/AJRVUZP0XmmMXKBpY2p1FWEMFYrKykjyoqCcskDD2HlvMzyCpe24K-iJVqRdjD4LWg5APwj-sqENVl0selUzuGO8KwU9vJCaUDLQGtUi6Wpb1qb9w5ObeMKX8ddyWCO9eDorucjR9jqOsVROcNPeMmHBdTW_rA=s800-w800-h600'},
 
   {id:'lunapark', zone:'בוקרשט', title:'לונה פארק — Orășelul Copiilor',
    desc:'לונה פארק אמיתי: קרוסלות, רכבת קטנה ומתקנים. כיף לילדים!',
+   more:'לונה פארק קלאסי עם קרוסלות, גלגל ענק ומתקנים לכל הגילאים. הכניסה חינם ומשלמים פר מתקן — מתאים במיוחד לקטנטנים.',
    price:'כניסה חינם · כל מתקן 10-20 ליי', free:true, time:'בבוקרשט',
    search:'Orășelul Copiilor Bucuresti', map:'https://www.google.com/maps/search/Oraselul+Copiilor+Bucuresti',
    img:'https://lh3.googleusercontent.com/place-photos/AJRVUZPzI_Snta7J-3L47EcFCSiTcWCjPIr4_Vo-G-aAekS7m_S6CxNv56Gp0xAVks9Mw6AJzHWM9gL4TfM-f_XaQHIe_oH0H7k01JL-GkDkB-6yB_WPmBDuDm_Fmf1fZOLkrnnjJCIHNWopkrORmw=s800-w800-h600'},
 
   {id:'luge', zone:'פרדיאל', title:'מגלשת קיץ + פארק חבלים',
    desc:'Mountain Coaster על מסילה + Fun Park Trei Brazi: אומגות, טיולי חבלים וטיובינג.',
+   more:'מגלשת הרים על מסילה שעובדת גם בקיץ ומתאימה לכל המשפחה, ולצידה פארק חבלים, אומגות וטיובינג. בום אדרנלין במרחק דקות מהבסיס.',
    price:'מגלשה 28 ליי/סיבוב · מסלולים 20-30 ליי', free:false, time:'בפרדיאל (5 דק׳)',
    search:'Mountain Coaster Predeal', map:'https://www.google.com/maps/search/Mountain+Coaster+Predeal',
    img:'https://lh3.googleusercontent.com/place-photos/AJRVUZNxPsSwRliGPMMYwiEjzV-QcRlkbF40r_a4Ae8r9jynyVZckLBwMZrsGilO80A4beyspu5U6pH0GFZW5J6l8ziXU1m1QXNMMXjB9BtPFh9Y83g1Qivl52Gmj0JGa0K7STqz20BXmzJwETMVilhV_xDdcA=s800-w800-h600'},
 
   {id:'bucegi', zone:'הרים', title:'רמת בוצ׳ג׳י — הספינקס והבאבּלֶה',
    desc:'רכבל מבושטני ל-2200 מ׳! נוף מטורף על הקרפטים והליכה קלה לסלעים המפורסמים.',
+   more:'רכבל מהעיירה בושטני מטפס לרמה ב-2200 מ׳, ומשם הליכה קלה לסלעי הספינקס והבאבּלה. קר ורוחי גם בקיץ — קחו ז׳קט, ועדיף להגיע בבוקר לפני העומס.',
    price:'רכבל ~199-218 ליי הלוך-חזור', free:false, time:'~30 דק׳',
    search:'Telecabina Busteni Babele', map:'https://www.google.com/maps/search/Telecabina+Busteni+Babele',
    img:'https://lh3.googleusercontent.com/place-photos/AJRVUZMaCdTgXwydztaQV6R8x8c-p5xIgzxrxYAFuvtiyELNTEXc-pJHUj3VTPSBAQXNUNToJANI87EZTHjuY5968yRGa4pfTuv5qcCVg8lj6M3Ec51w3k7OdrufOCseRosf3JzEw_hutKqnxbddvQ=s4800-w800-h600'},
 
   {id:'telecabina', zone:'פרדיאל', title:'רכבל פוסטוארו + Adventure Park',
    desc:'רכבל לפסגה ב-1799 מ׳ + פארק החבלים הכי טוב באזור (מגיל 4).',
+   more:'רכבל לפסגת פוסטוארו עם נוף לפויאנה בְּרַשוֹב, וצמוד אליו פארק החבלים הגדול באזור עם מסלולים לפי גיל וגובה. שילוב מנצח של נוף ופעילות.',
    price:'רכבל ~80 ליי · פארק ~60 ליי (רביעי -50%)', free:false, time:'~40 דק׳',
    search:'Adventure Park Brasov', map:'https://www.google.com/maps/search/Adventure+Park+Brasov',
    img:'https://lh3.googleusercontent.com/place-photos/AJRVUZPZysqwItUrGeL6VS2lv0Y9RHPEaJmk3hrxqX7szRQ8E7w7lKgInQiTNw-wyC_9C-29RvJexQVDepoAJa2hx7lLp2UuQqMDowvub-SechA6i4KbZ6PAjZ38CN3G1bZFpSHGzoSyl_P-iz6qvA=s800-w800-h600'},
 
   {id:'dino', zone:'הרים', title:'דינו פארק + מבצר ראשנוב',
    desc:'דינוזאורים בגודל טבעי ביער + מצודה מימי הביניים ממש ליד.',
+   more:'שביל ביער עם דינוזאורים בגודל טבעי, אזור משחקים וקולנוע 9D — כיף לילדים. במרחק קצר נמצאת מצודת ראשנוב מהמאה ה-13 עם נוף מרהיב.',
    price:'30 ליי מבוגר / 23 ליי ילד (עד 3 חינם)', free:false, time:'~45 דק׳',
    search:'Dino Parc Rasnov', map:'https://www.google.com/maps/search/Dino+Parc+Rasnov',
    img:'https://lh3.googleusercontent.com/place-photos/AJRVUZMy5-4B7ECKxDkiWLku1yiH87ddmSk7xuDwGeZtzv33cFExnsHjsPysByKPmfCtT68yi97kS4l3IKyf3K6kY_eqehjUssZJkt_npy3Ygdd9fS2-UpTk6fywkU6rUoKNM2rKWUFuYaSY2c2xkg=s800-w800-h600'},
 
   {id:'bran', zone:'הרים', title:'טירת בראן (דרקולה)',
    desc:'הטירה המפורסמת של דרקולה 🦇 — נוף מרהיב. כדאי להזמין כרטיס מראש!',
+   more:'הטירה ששימשה השראה לאגדת דרקולה, עם מסדרונות, חצרות ותצוגות פנים. עמוסה בקיץ — קנו כרטיס מראש והגיעו מוקדם. ביציאה יש שוק מזכרות.',
    price:'90 ליי מבוגר · 30 ליי ילד (עד 7 חינם)', free:false, time:'~50 דק׳',
    search:'Bran Castle', map:'https://www.google.com/maps/search/Bran+Castle',
    img:'https://lh3.googleusercontent.com/place-photos/AJRVUZPyHuJGIJiDIzG1u4VMt-ekUYSwz0awf2y27o7NW5tsywy67gTlL1Talj5GhVnaCcAuwNPDkES8JgjVN9W4gz42TjT30bMn7zD38u3djdu3INxsKel94spypc4I2h7VqVNjYyUPPSD6q2BG6xg=s800-w800-h600'},
 
   {id:'aquatic', zone:'הרים', title:'פארק מים — Aquatic Paradise',
    desc:'בריכות פנים/חוץ, מגלשות, ג׳קוזי וסאונות בבְּרַשוֹב. מנוחה מושלמת.',
+   more:'קומפלקס בריכות פנים וחוץ, מגלשות מים, ג׳קוזי וסאונות. מושלם ליום גשום או למנוחה אחרי טיולים — אפשר לשהות כמה שעות בנחת.',
    price:'~60-90 ליי לאדם (לפי זמן)', free:false, time:'~35 דק׳',
    search:'Aquatic Paradise Brasov', map:'https://www.google.com/maps/search/Aquatic+Paradise+Brasov',
    img:'https://lh3.googleusercontent.com/place-photos/AJRVUZMl4w1WYW5guote7hzOA6YKS99zUyhMqByXM0jh0VxCWBQZucdbKGh-iAABFoomv3OlL3NVWHyS_pYMCCtjV5IKqAXEdS6RAd8-bspIYOtej1Gn-gtqrVKliZF76ACmIJ1h8KjAU93T2X2ZwZs=s800-w800-h600'},
 
   {id:'brasov', zone:'הרים', title:'העיר העתיקה של בְּרַשוֹב',
    desc:'כיכר המועצה, הרחוב הצר (Sforii) ורכבל הר טמפה. מקסים לטייל.',
+   more:'אחת הערים היפות ברומניה: כיכר המועצה, הכנסייה השחורה והסמטה הצרה בעיר. רכבל קצר עולה להר טמפה לנוף פנורמי מלמעלה.',
    price:'טיול חינם · רכבל טמפה ~20 ליי', free:true, time:'~30 דק׳',
    search:'Piata Sfatului Brasov', map:'https://www.google.com/maps/search/Piata+Sfatului+Brasov',
    img:'https://lh3.googleusercontent.com/place-photos/AJRVUZM3MlSboGErDwNUOHdk65GLd9cSlx3raobW1RyaAZ35flwXeHB6ufNGWHh5H2Xqh7o-HgVWaU-rcGM4o2Rhq57tClZdhgDWBCCSZOPoMQtZhZ8jbNu2YCUm5SdTbFwDjyhvyv3_3KRvqzIAKw=s800-w800-h600'},
 
   {id:'peles', zone:'הרים', title:'סינאיה — טירת פּלֶש + לייזר טאג',
    desc:'אחת הטירות היפות באירופה + לייזר טאג לילדים הגדולים 👾',
+   more:'טירת פלש מפוארת עם פנים מעוטר להפליא — סיור מודרך מומלץ מאוד. בסינאיה יש גם לייזר טאג, בתי קפה ורכבל. אפשר לשלב יום שלם.',
    price:'פלש 50 ליי מבוגר · 12.5 ליי ילד', free:false, time:'~15 דק׳',
    search:'Peles Castle Sinaia', map:'https://www.google.com/maps/search/Peles+Castle+Sinaia',
    img:'https://lh3.googleusercontent.com/place-photos/AJRVUZPYoMSCF6YtuRQfiQyR_fh5iwagQNfYYUXiALoewbuKl7iOmg6gdX152Pu9_eSFKCkWzeeYX784umrKMP2cDYX_KqMTOSiRCRihwpog5DXjEpB5cWoT-iFW3o_dFy4FSThD4-1pda4RGMdP=s800-w800-h600'},
 
   {id:'funpark', zone:'פרדיאל', title:'Fun Park Trei Brazi',
    desc:'פארק חבלים, אומגות וטיובינג ביער — מצוין לילדים (חצי יום).',
+   more:'פארק חבלים, אומגות וטיובינג ביער שמעל פרדיאל, עם מסלולים מגיל צעיר ועד מאתגרים. חצי יום פעילות מהנה באוויר הפתוח.',
    price:'מסלולים 20-30 ליי', free:false, time:'בפרדיאל (5 דק׳)',
    search:'Fun Park Trei Brazi Predeal', map:'https://www.google.com/maps/search/Fun+Park+Trei+Brazi+Predeal',
    img:'https://lh3.googleusercontent.com/place-photos/AJRVUZPiXHop_YucItx0zREX3DKH4urdKCpDMhU5TXuuBy7aexuq9aIynsR5n2NbTxRwhWRb-zWQev45GPfaWSJKfqlzvWm2gS03m30OyiseOGA5eyFCWQTdJvhY3JYnDKtAy9L9Oml0ajNkPQNrq6w=s800-w800-h600'},
@@ -553,7 +568,11 @@ function openDetail(actId){
       ${chip('time','🚗 '+a.time)}
     </div>
     <p class="detail-desc">${a.desc}</p>
-    <a class="detail-map" href="${a.map}" target="_blank" rel="noopener">🗺️ פתחו ב-Google Maps</a>
+    ${a.more ? `<p class="detail-more">${a.more}</p>` : ''}
+    <div class="detail-links">
+      <a class="detail-link" href="${a.map}" target="_blank" rel="noopener">🗺️ מפה</a>
+      <a class="detail-link" href="https://www.google.com/search?q=${encodeURIComponent(a.search + ' Romania')}" target="_blank" rel="noopener">🔍 גוגל</a>
+    </div>
     <button class="btn ${inPlan?'btn-add in':'btn-add'}" data-detail-add="${actId}">
       ${inPlan ? '✓ בתוכנית · לחצו לשינוי יום' : '➕ הוסיפו לתוכנית'}
     </button>`;
