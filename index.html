@@ -213,6 +213,11 @@
   .vote-btn:active{transform:scale(.98);}
   .vote-btn.voted{background:var(--gold);border-color:var(--gold);color:#3a2a06;}
   .vote-btn .vcount{font-weight:800;}
+  .vote-mini{flex:0 0 auto;border:1.5px solid var(--line);background:var(--card);cursor:pointer;
+    font-family:'Heebo';font-weight:800;font-size:15px;color:var(--ink-soft);
+    padding:12px 13px;border-radius:13px;display:flex;align-items:center;gap:4px;transition:.15s;white-space:nowrap;}
+  .vote-mini:active{transform:scale(.95);}
+  .vote-mini.voted{background:var(--gold);border-color:var(--gold);color:#3a2a06;}
 
   /* ---------- name sheet input ---------- */
   .name-input{
@@ -484,9 +489,12 @@ async function savePlan(){
 function chip(cls, txt){ return `<span class="chip ${cls}">${txt}</span>`; }
 
 // ---------- votes ----------
-function voteBtnHTML(actId){
+function voteBtnHTML(actId, mini){
   const arr = votes[actId] || [];
   const voted = !!familyName && arr.includes(familyName);
+  if(mini){
+    return `<button class="vote-mini ${voted?'voted':''}" data-vote="${actId}" title="${voted?'אתם בעניין':'בעניין?'}">👍${arr.length?` ${arr.length}`:''}</button>`;
+  }
   return `<button class="vote-btn ${voted?'voted':''}" data-vote="${actId}">
     👍 ${voted?'אתם בעניין':'בעניין?'}${arr.length?` <span class="vcount">· ${arr.length}</span>`:''}
   </button>`;
@@ -516,8 +524,9 @@ function renderOptions(){
       </div>
       <div class="body">
         <h3>${a.title}</h3>
-        ${voteBtnHTML(a.id)}
+        <div class="desc">${a.desc}</div>
         <div class="card-actions">
+          ${voteBtnHTML(a.id, true)}
           <button class="btn btn-more" data-more="${a.id}">ℹ️ עוד מידע</button>
           <button class="btn ${inPlan?'btn-add in':'btn-add'}" data-add="${a.id}">
             ${inPlan ? '✓ בתוכנית · שינוי יום' : '➕ הוסיפו'}
