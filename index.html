@@ -273,7 +273,7 @@
     <h1>רומניה — בוקרשט והקרפטים</h1>
     <div class="trip-meta">
       <span>📅 24 ביולי – 3 באוגוסט 2026</span>
-      <span>🏠 בסיס: פְּרֶדֶיאל <span class="ro-flag"></span></span>
+      <span>🏠 בוקרשט (24–27/7) → פְּרֶדֶיאל (27/7–3/8) <span class="ro-flag"></span></span>
     </div>
   </header>
 
@@ -295,7 +295,7 @@
 
   <!-- PLAN VIEW -->
   <section class="view" id="view-plan">
-    <div class="hint">התוכנית מסודרת לפי ימים. אפשר להזיז פעילות ליום אחר או להסיר אותה. ⏱️ זמני הנסיעה הם מהבסיס בפְּרֶדֶיאל.</div>
+    <div class="hint">התוכנית מסודרת לפי ימים. אפשר להזיז פעילות ליום אחר או להסיר אותה. ⏱️ זמני הנסיעה הם מהבסיס הרלוונטי — בוקרשט בתחילת הטיול, פְּרֶדֶיאל אחר כך.</div>
     <div id="planList"></div>
   </section>
 
@@ -548,23 +548,28 @@ async function toggleVote(actId){
   await savePlan();
 }
 
+// 2 bases : Bucarest (1ère partie) puis Predeal (montagnes incl.)
 let zoneFilter = 'all';
+const FILTER_GROUPS = [
+  {key:'all',       label:'הכל',          test:()=>true},
+  {key:'bucharest', label:'🏙️ בוקרשט',    test:a=>a.zone==='בוקרשט'},
+  {key:'predeal',   label:'⛰️ פרדיאל והרים', test:a=>a.zone==='פרדיאל'||a.zone==='הרים'},
+];
 function renderFilters(){
   const bar = $('#filterBar');
   if(!bar) return;
-  const zones = [...new Set(ACT.map(a=>a.zone))];
-  const btns = [['all','הכל', ACT.length]]
-    .concat(zones.map(z=>[z, z, ACT.filter(a=>a.zone===z).length]));
-  bar.innerHTML = btns.map(([key,label,n])=>
-    `<button class="filter-btn ${zoneFilter===key?'active':''}" data-filter="${key}">${label} <span class="fcount">${n}</span></button>`
-  ).join('');
+  bar.innerHTML = FILTER_GROUPS.map(g=>{
+    const n = ACT.filter(g.test).length;
+    return `<button class="filter-btn ${zoneFilter===g.key?'active':''}" data-filter="${g.key}">${g.label} <span class="fcount">${n}</span></button>`;
+  }).join('');
   bar.querySelectorAll('[data-filter]').forEach(b=>{
     b.onclick = ()=>{ zoneFilter = b.dataset.filter; renderFilters(); renderOptions(); };
   });
 }
 
 function renderOptions(){
-  const list = ACT.filter(a => zoneFilter==='all' || a.zone===zoneFilter);
+  const g = FILTER_GROUPS.find(x=>x.key===zoneFilter) || FILTER_GROUPS[0];
+  const list = ACT.filter(g.test);
   optionsList.innerHTML = list.map(a=>{
     const inPlan = plan[a.id] !== undefined;
     const priceCls = a.free ? 'price free' : 'price';
