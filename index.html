@@ -124,6 +124,11 @@
   .btn-remove{background:#f6e7e1;color:var(--terra-d);}
   .btn-remove:active{transform:scale(.98);}
 
+  .card-actions{display:flex;gap:8px;}
+  .card-actions .btn-add{flex:1.4;}
+  .btn-more{flex:1;background:var(--paper-2);color:var(--ink-soft);}
+  .btn-more:active{transform:scale(.98);background:var(--line);}
+
   /* ---------- plan view ---------- */
   .day-block{margin-bottom:20px;}
   .day-head{
@@ -180,6 +185,18 @@
   .day-opt .dn{font-family:'Suez One',serif;font-size:20px;color:var(--terra-d);}
   .day-opt .dl{font-size:11px;color:var(--ink-soft);margin-top:2px;}
   .day-opt.flex{grid-column:span 3;color:var(--green-d);border-style:dashed;}
+
+  /* ---------- activity detail modal ---------- */
+  .detail-ph{position:relative;height:200px;border-radius:16px;overflow:hidden;margin-bottom:14px;background:var(--paper-2) center/cover no-repeat;}
+  .detail-ph img{width:100%;height:100%;object-fit:cover;display:block;}
+  .detail-ph::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.4),transparent 52%);}
+  .detail-title{font-size:21px;font-weight:800;line-height:1.18;margin-bottom:10px;}
+  .detail-chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:13px;}
+  .detail-desc{font-size:14.5px;color:var(--ink-soft);line-height:1.55;margin-bottom:15px;}
+  .detail-map{display:flex;align-items:center;justify-content:center;gap:7px;text-decoration:none;
+    background:var(--paper-2);color:var(--green-d);font-weight:700;font-size:14px;
+    padding:11px;border-radius:13px;margin-bottom:10px;transition:.15s;}
+  .detail-map:active{transform:scale(.98);background:var(--line);}
 
   /* ---------- toast ---------- */
   .toast{
@@ -251,6 +268,13 @@
   <h3 id="sheetTitle">לאיזה יום לשבץ?</h3>
   <div class="sub" id="sheetSub"></div>
   <div class="day-grid" id="dayGrid"></div>
+</div>
+
+<!-- activity detail modal -->
+<div class="sheet-bg" id="detailBg"></div>
+<div class="sheet" id="detailSheet">
+  <div class="grip"></div>
+  <div id="detailBody"></div>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -410,18 +434,20 @@ function renderOptions(){
       </div>
       <div class="body">
         <h3>${a.title}</h3>
-        <div class="desc">${a.desc}</div>
-        <div class="meta-row">
-          <span class="g">🔎 <a href="${a.map}" target="_blank" rel="noopener">${a.search}</a></span>
+        <div class="card-actions">
+          <button class="btn btn-more" data-more="${a.id}">ℹ️ עוד מידע</button>
+          <button class="btn ${inPlan?'btn-add in':'btn-add'}" data-add="${a.id}">
+            ${inPlan ? '✓ בתוכנית · שינוי יום' : '➕ הוסיפו'}
+          </button>
         </div>
-        <button class="btn ${inPlan?'btn-add in':'btn-add'}" data-add="${a.id}">
-          ${inPlan ? '✓ נמצא בתוכנית · לחצו לשינוי יום' : '➕ הוסיפו לתוכנית'}
-        </button>
       </div>
     </div>`;
   }).join('');
   optionsList.querySelectorAll('[data-add]').forEach(b=>{
     b.onclick = ()=> openSheet(b.dataset.add);
+  });
+  optionsList.querySelectorAll('[data-more]').forEach(b=>{
+    b.onclick = ()=> openDetail(b.dataset.more);
   });
   updateCounts();
 }
@@ -459,6 +485,7 @@ function renderPlan(){
   planList.innerHTML = html;
   planList.querySelectorAll('[data-move]').forEach(b=> b.onclick=()=>openSheet(b.dataset.move));
   planList.querySelectorAll('[data-del]').forEach(b=> b.onclick=()=>removeAct(b.dataset.del));
+  planList.querySelectorAll('[data-info]').forEach(b=> b.onclick=()=>openDetail(b.dataset.info));
   updateCounts();
 }
 
@@ -474,6 +501,7 @@ function planItemHTML(id){
       </div>
     </div>
     <div class="pi-actions">
+      <button class="pi-btn" data-info="${id}" title="עוד מידע">ℹ️</button>
       <button class="pi-btn" data-move="${id}" title="העברה ליום אחר">🔀</button>
       <button class="pi-btn del" data-del="${id}" title="הסרה">🗑️</button>
     </div>
@@ -507,6 +535,35 @@ function closeSheet(){
   $('#sheetBg').classList.remove('open');
   $('#sheet').classList.remove('open');
   pendingActId = null;
+}
+
+// ---------- activity detail modal ----------
+function openDetail(actId){
+  const a = ACT_MAP[actId]; if(!a) return;
+  const inPlan = plan[actId] !== undefined;
+  const priceCls = a.free ? 'price free' : 'price';
+  $('#detailBody').innerHTML = `
+    <div class="detail-ph">
+      <span class="zone-tag">${a.zone}</span>
+      <img src="${a.img}" alt="${a.title}">
+    </div>
+    <h3 class="detail-title">${a.title}</h3>
+    <div class="detail-chips">
+      ${chip(priceCls,'💰 '+a.price)}
+      ${chip('time','🚗 '+a.time)}
+    </div>
+    <p class="detail-desc">${a.desc}</p>
+    <a class="detail-map" href="${a.map}" target="_blank" rel="noopener">🗺️ פתחו ב-Google Maps</a>
+    <button class="btn ${inPlan?'btn-add in':'btn-add'}" data-detail-add="${actId}">
+      ${inPlan ? '✓ בתוכנית · לחצו לשינוי יום' : '➕ הוסיפו לתוכנית'}
+    </button>`;
+  $('#detailBody').querySelector('[data-detail-add]').onclick = ()=>{ closeDetail(); openSheet(actId); };
+  $('#detailBg').classList.add('open');
+  $('#detailSheet').classList.add('open');
+}
+function closeDetail(){
+  $('#detailBg').classList.remove('open');
+  $('#detailSheet').classList.remove('open');
 }
 async function assignDay(dayId){
   if(!pendingActId) return;
@@ -558,6 +615,7 @@ $('#shareBtn').onclick = async ()=>{
 
 // ---------- sheet close on bg ----------
 $('#sheetBg').onclick = closeSheet;
+$('#detailBg').onclick = closeDetail;
 
 // ---------- live refresh (other families' changes) ----------
 async function refresh(){
